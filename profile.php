@@ -1,166 +1,211 @@
+<?php
+session_start();
+function e($v)
+{
+  return htmlspecialchars((string)$v ?? '', ENT_QUOTES, 'UTF-8');
+}
+$name     = e($_SESSION['name']     ?? 'admin');
+$username = e($_SESSION['username'] ?? 'admin123');
+$email    = e($_SESSION['email']    ?? 'admin@localhost');
+$phone    = e($_SESSION['phone']    ?? '000');
+$status   = e($_SESSION['status']   ?? 'online');
+?>
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title>N3 Sport</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
-
-  <!-- Favicons -->
-  <link href="4e.png" rel="icon">
-  <link href="4e.png" rel="apple-touch-icon">
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
-  <link href="assets/vendor/quill/quill.snow.css" rel="stylesheet">
-  <link href="assets/vendor/quill/quill.bubble.css" rel="stylesheet">
-  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
-  <link href="assets/vendor/simple-datatables/style.css" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="assets/css/style.css" rel="stylesheet">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Wallpoet&display=swap" rel="stylesheet">
-<style>
-  #con0 {
-    font-family: 'Wallpoet', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    font-style: normal;
-  }
-   #con1 {
-    font-family: 'Wallpoet', sans-serif;
-    font-size: 18px;
-    font-weight: 400;
-    font-style: normal;
-  }
-  #con2 {
-    font-family: 'Wallpoet', sans-serif;
-    font-size: 20px;
-    font-weight: 400;
-    font-style: normal;
-  } 
-  #con3 {
-    font-family: 'Wallpoet', sans-serif;
-    font-size: 24px;
-    font-weight: 400;
-    font-style: normal;
-  }
-  #con4 {
-    font-family: 'Wallpoet', sans-serif;
-    font-size: 26px;
-    font-weight: 700;
-    font-style: normal;
-  }
-  </style>
-</head>
+<?php require __DIR__ . '/app/bootstrap.php'; page_start('Profile'); ?>
 
 <body>
-
-
-   <!-- ======= Header ======= -->
-    <header id="header"  class="header fixed-top d-flex align-items-right">
-     
-      <img src="logo2.png"  alt="">
-  <ul class="nav nav-underline" >
-  <ul class="nav nav-pills nav-pills" style="padding-right: 0.1cm;"></ul>
-  <li class="nav-item" style="padding-top: 0.07cm;">
-    <a class="nav-link" href="profile.php"  id="con4">Profile</a>
-  </li>
-  <ul class="nav nav-pills nav-pills" style="padding-right: 0.1cm;"></ul>
-  <li class="nav-item" style="padding-top: 0.07cm;">
-    <a class="nav-link" href="#"  id="con4">Register</a>
-  </li>
-    <ul class="nav nav-pills nav-pills" style="padding-right: 0.1cm;"></ul>
-  <li class="nav-item" style="padding-top: 0.07cm;">
-    <a class="nav-link" href="equipment.php"  id="con4">Equipment</a>
-  </li>
-  <ul class="nav nav-pills nav-pills" style="padding-right: 0.1cm;"></ul>
-  <li class="nav-item" style="padding-top: 0.07cm;">
-    <a class="nav-link" href="login.php"  id="con4">Login</a>
-  </li>
-  <ul class="nav nav-pills nav-pills" style="padding-right: 0.1cm;"></ul>
-  <li class="nav-item" style="padding-top: 0.07cm;">
-    <a class="nav-link" href="#"  id="con4">Logout</a>
-  </li>
-  
-</ul>
-  </header><!-- End Header -->
-
-  <!-- End Dashboard Nav -->
-
-
-
-
-      <!-- End F.A.Q Page Nav -->
-
-    
-
-        <!-- Left side columns -->
-         <div class="col-lg-12 mt-10 pt-5 d-flex justify-content-between">
-      <div class="card mb-5" style="width: 2000px;">
-        <div class="row g-0">
-    <div class="col-md-4">
-  <img src="https://images.seeklogo.com/logo-png/28/1/premier-league-new-logo-png_seeklogo-286461.png" class="img-fluid rounded-start" alt="..." >
-  </div>
-    <div class="col-md-8">
-  <div class="card-body">
-    <h5 class="card-title" id="con4">Profile | ข้อมูลส่วนตัว</h5>
-<ul class="list-group list-group-flush"> 
-  <li class="list-group-item" id="con1">Name: <?php echo $_SESSION["name"]?></li>
-  <li class="list-group-item" id="con1">Username: <?php echo $_SESSION["username"]?></li>
-  <li class="list-group-item" id="con1">Password: <?php echo $_SESSION["password"]?></li>
-  <li class="list-group-item" id="con1">Phone: <?php echo $_SESSION["phone"]?></li>
-  <li class="list-group-item" id="con1">E-mail: <?php echo $_SESSION["email"]?></li>
-  <li class="list-group-item" id="con1">Status: <?php echo $_SESSION["status"]?></li>
-</ul>
-    <a href="#" class="btn btn-primary">Edit information</a>
-  </div>
-</div>
-
-        </div><!-- End Left side columns -->
- </div>
-        <!-- Right side columns -->
-         
-
+  <main id="content" class="container">
+    <!-- Hero -->
+    <section class="position-relative overflow-hidden rounded-4 shadow-sm mb-4"
+      style="background: linear-gradient(120deg,#0ea5e9 0%, #6366f1 60%, #a855f7 100%); min-height: 140px;">
+      <div class="h-100 d-flex align-items-center py-5 px-3 px-lg-4">
+        <div class="d-flex align-items-center gap-3">
+          <img src="https://images.seeklogo.com/logo-png/28/1/premier-league-new-logo-png_seeklogo-286461.png"
+            alt="Avatar"
+            class="rounded-circle border border-3 border-light shadow"
+            style="width:72px;height:72px;object-fit:cover;">
+          <div class="text-white">
+            <div class="h5 mb-1 fw-semibold"><?= $name ?></div>
+            <div class="d-flex flex-wrap gap-2">
+              <span class="badge bg-light text-dark text-uppercase">ID: <?= strtoupper($username) ?></span>
+              <?php
+              $badgeClass = 'bg-secondary';
+              if (strtolower($status) === 'online')  $badgeClass = 'bg-success';
+              elseif (strtolower($status) === 'away') $badgeClass = 'bg-warning text-dark';
+              ?>
+              <span class="badge <?= $badgeClass ?>"><?= ucfirst($status) ?></span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-  </main><!-- End #main -->
 
-  <!-- ======= Footer ======= -->
-  
-    
-    </div>
-  <!-- End Footer -->
+    <!-- Profile Card -->
+    <section class="">
+      <div class="card border-0 shadow-sm rounded-4">
+        <div class="card-body p-4 p-lg-5">
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 class="card-title mb-0" id="con4">Profile | ข้อมูลส่วนตัว</h5>
+            <span class="text-muted small">ปรับปรุงข้อมูลของคุณได้ที่นี่</span>
+          </div>
+          <hr class="text-muted" />
 
-  <!-- Vendor JS Files -->
-  <script src="assets/vendor/apexcharts/apexcharts.min.js"></script>
+          <form id="profileForm" method="post" action="profile_update.php" novalidate>
+            <div class="row g-3 g-lg-4">
+
+              <!-- Name -->
+              <div class="col-12 col-md-6">
+                <label class="form-label small text-muted mb-1"><i class="bi bi-person me-1"></i>Name</label>
+                <input type="text" class="form-control-plaintext px-0 fw-medium"
+                  name="name" value="<?= $name ?>" readonly data-editable>
+              </div>
+
+              <!-- Username -->
+              <div class="col-12 col-md-6">
+                <label class="form-label small text-muted mb-1"><i class="bi bi-at me-1"></i>Username</label>
+                <input type="text" class="form-control-plaintext px-0 fw-medium"
+                  name="username" value="<?= $username ?>" readonly data-editable>
+              </div>
+
+              <!-- Email -->
+              <div class="col-12 col-md-6">
+                <label class="form-label small text-muted mb-1"><i class="bi bi-envelope me-1"></i>E-mail</label>
+                <input type="email" class="form-control-plaintext px-0"
+                  name="email" value="<?= $email ?>" readonly data-editable>
+              </div>
+
+              <!-- Phone -->
+              <div class="col-12 col-md-6">
+                <label class="form-label small text-muted mb-1"><i class="bi bi-telephone me-1"></i>Phone</label>
+                <input type="text" class="form-control-plaintext px-0"
+                  name="phone" value="<?= $phone ?>" readonly data-editable>
+              </div>
+
+              <!-- Password fields: hidden until Edit -->
+              <div class="col-12 col-md-6 d-none" data-edit-only>
+                <label class="form-label small text-muted mb-1"><i class="bi bi-shield-lock me-1"></i>New Password</label>
+                <input type="password" class="form-control" name="new_password"
+                  placeholder="(เว้นว่างหากไม่ต้องการเปลี่ยน)" disabled>
+              </div>
+              <div class="col-12 col-md-6 d-none" data-edit-only>
+                <label class="form-label small text-muted mb-1">Confirm New Password</label>
+                <input type="password" class="form-control" name="confirm_password"
+                  placeholder="ยืนยันรหัสผ่านใหม่" disabled>
+              </div>
+
+              <!-- Status (read-only) -->
+              <div class="col-12 col-md-6">
+                <label class="form-label small text-muted mb-1"><i class="bi bi-activity me-1"></i>Status</label>
+                <input type="text" class="form-control-plaintext px-0"
+                  value="<?= $status ?>" readonly aria-readonly="true">
+              </div>
+
+            </div>
+
+            <!-- Actions -->
+            <div class="d-flex flex-wrap gap-2 mt-4">
+              <button type="button" id="btnEdit" class="btn btn-primary">
+                <i class="bi bi-pencil-square me-1"></i>Edit information
+              </button>
+              <button type="submit" id="btnSave" class="btn btn-success d-none">
+                <i class="bi bi-check2 me-1"></i>Save
+              </button>
+              <button type="button" id="btnCancel" class="btn btn-outline-secondary d-none">
+                Cancel
+              </button>
+              <a href="logout.php" class="btn btn-outline-danger ms-auto">
+                <i class="bi bi-box-arrow-right me-1"></i>Logout
+              </a>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Provider -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/chart.js/chart.umd.js"></script>
-  <script src="assets/vendor/echarts/echarts.min.js"></script>
-  <script src="assets/vendor/quill/quill.js"></script>
-  <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
-  <script src="assets/vendor/tinymce/tinymce.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/js/layout-utils.js"></script>
 
-  <!-- Template Main JS File -->
-  <script src="assets/js/main.js"></script>
+  <script>
+    // กัน navbar fixed-top ชน content
+    LayoutUtils.autoSpacing({
+      header: 'header',
+      target: 'content',
+      extra: 8,
+      mode: 'margin'
+    });
 
+    // Inline edit
+    (function() {
+      const form = document.getElementById('profileForm');
+      const btnEdit = document.getElementById('btnEdit');
+      const btnSave = document.getElementById('btnSave');
+      const btnCancel = document.getElementById('btnCancel');
+
+      const editable = Array.from(form.querySelectorAll('[data-editable]'));
+      const editOnlyBlocks = Array.from(form.querySelectorAll('[data-edit-only]'));
+      const pwd1 = form.elements['new_password'];
+      const pwd2 = form.elements['confirm_password'];
+
+      function snapshot() {
+        editable.forEach(el => el.dataset.orig = el.value);
+      }
+      snapshot();
+
+      function togglePwdFields(show) {
+        editOnlyBlocks.forEach(b => b.classList.toggle('d-none', !show));
+        [pwd1, pwd2].forEach(el => {
+          el.disabled = !show;
+          el.required = false;
+          if (!show) el.value = '';
+        });
+      }
+
+      function setEditMode(on) {
+        editable.forEach(el => {
+          if (on) {
+            el.readOnly = false;
+            el.classList.remove('form-control-plaintext', 'px-0');
+            el.classList.add('form-control');
+          } else {
+            el.readOnly = true;
+            el.classList.remove('form-control');
+            el.classList.add('form-control-plaintext', 'px-0');
+            if (el.dataset.orig !== undefined) el.value = el.dataset.orig;
+          }
+        });
+        togglePwdFields(on);
+        btnEdit.classList.toggle('d-none', on);
+        btnSave.classList.toggle('d-none', !on);
+        btnCancel.classList.toggle('d-none', !on);
+      }
+
+      btnEdit.addEventListener('click', () => setEditMode(true));
+      btnCancel.addEventListener('click', () => setEditMode(false));
+
+      form.addEventListener('submit', function(e) {
+        // เช็ครหัสผ่านใหม่ให้ตรงกัน (กรณีตั้งใจเปลี่ยน)
+        if (!pwd1.disabled || !pwd2.disabled) {
+          const a = pwd1.value.trim(),
+            b = pwd2.value.trim();
+          if ((a || b) && a !== b) {
+            e.preventDefault();
+            e.stopPropagation();
+            alert('รหัสผ่านใหม่และยืนยันรหัสผ่านต้องตรงกัน');
+          }
+        }
+      });
+    })();
+  </script>
 </body>
+
+<?php page_end(); ?>
 
 </html>
