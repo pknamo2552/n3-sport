@@ -7,17 +7,19 @@ function is_active($file){
 
 /** เปิดหน้า: include <head>, header และเปิด <main> */
 function page_start(string $title='N3 Sport'){
-  $root   = dirname(__DIR__);                // .../n3-sport
+  $root   = dirname(__DIR__);
   $assets = $root . '/assets';
 
   $GLOBALS['_page_title'] = $title;
   $GLOBALS['base'] = BASE_URL;
 
-  require $assets . '/component/heading.php';
+  echo "<!DOCTYPE html>\n<html lang=\"en\">\n";
+  require $assets . '/component/heading.php';  // <-- heading ไม่มี <html> แล้ว
   echo "<body>\n";
   require $assets . '/component/navbar.php';
   echo '<main id="content" class="container py-4">' . PHP_EOL;
 }
+
 
 /** ปิดหน้า: ปิด <main>, include footer และสคริปต์จำเป็น */
 function page_end(){

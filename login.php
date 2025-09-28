@@ -14,7 +14,7 @@
               <p class="text-muted small">Sign in to N3 Sport</p>
             </div>
 
-            <form name="formLogin" method="post" action="page/checklogin.php" novalidate>
+            <form name="formLogin" method="post" action="utils/login_regis_service/checklogin.php" novalidate>
               <div class="mb-3">
                 <label class="form-label">Username | ชื่อผู้ใช้</label>
                 <input type="text" class="form-control" name="username" required>

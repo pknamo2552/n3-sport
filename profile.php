@@ -1,22 +1,17 @@
-<?php
-session_start();
-function e($v)
-{
-  return htmlspecialchars((string)$v ?? '', ENT_QUOTES, 'UTF-8');
-}
-$name     = e($_SESSION['name']     ?? 'admin');
-$username = e($_SESSION['username'] ?? 'admin123');
-$email    = e($_SESSION['email']    ?? 'admin@localhost');
-$phone    = e($_SESSION['phone']    ?? '000');
-$status   = e($_SESSION['status']   ?? 'online');
-?>
-<!DOCTYPE html>
-<html lang="en">
-
-<?php require __DIR__ . '/app/bootstrap.php'; page_start('Profile'); ?>
+<?php require __DIR__ . '/app/bootstrap.php';
+page_start('Profile'); ?>
 
 <body>
   <main id="content" class="container">
+
+    <?php
+    $name     = e($_SESSION['name']     ?? '');
+    $username = e($_SESSION['username'] ?? '');
+    $email    = e($_SESSION['email']    ?? '');
+    $phone    = e($_SESSION['phone']    ?? '');
+    $status   = e($_SESSION['status']   ?? '');
+    ?>
+
     <!-- Hero -->
     <section class="position-relative overflow-hidden rounded-4 shadow-sm mb-4"
       style="background: linear-gradient(120deg,#0ea5e9 0%, #6366f1 60%, #a855f7 100%); min-height: 140px;">
