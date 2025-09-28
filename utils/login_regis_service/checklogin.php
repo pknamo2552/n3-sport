@@ -1,65 +1,36 @@
 <?php
-// page/checklogin.php
-require __DIR__ . '/../../app/bootstrap.php';
+// utils/checklogin.php
 require __DIR__ . '/../../app/db.php';
+require __DIR__ . '/../../app/helpers.php';
+session_start();
 
-// ---------- Helper to redirect ----------
-function redirect(string $path): void {
-    header("Location: $path");
-    exit;
-}
-
-// ---------- Read Input from form ----------
 $username = trim($_POST['username'] ?? '');
-$password = trim($_POST['password'] ?? '');
+$password = $_POST['password'] ?? '';
 
-// ถ้าเว้นว่าง → กลับไปหน้า login
 if ($username === '' || $password === '') {
-    // ถ้ามีระบบ flash ก็ใส่ข้อความใน $_SESSION['error'] ได้
-    redirect('../login.php'); // อยู่คนละโฟลเดอร์กับ checklogin.php
+  flash_add('danger', 'กรุณากรอกชื่อผู้ใช้และรหัสผ่าน');
+  header('Location: /n3-sport/login.php'); exit;
 }
 
-// ---------- Connect to database ----------
-$conn = db();
+$mysqli = db();
+$stmt = $mysqli->prepare("SELECT id, username, name, email, phone, password FROM users WHERE username=? LIMIT 1");
+$stmt->bind_param('s', $username);
+$stmt->execute();
+$user = $stmt->get_result()->fetch_assoc();
+$stmt->close();
 
-// ---------- Query (Prepared Statement) ----------
-$sql  = "SELECT id, name, username, password, phone, email, status
-         FROM users
-         WHERE username = ? AND password = ?
-         LIMIT 1";
-$stmt = mysqli_prepare($conn, $sql);
-if (!$stmt) {
-    redirect('../../login.php');
+if ($user && $password === $user['password']) {
+  // set session
+  $_SESSION['username'] = $user['username'];
+  $_SESSION['name']     = $user['name'];
+  $_SESSION['email']    = $user['email'];
+  $_SESSION['phone']    = $user['phone'];
+  $_SESSION['status']   = 'online';
+
+  flash_add('success', 'เข้าสู่ระบบสำเร็จ ยินดีต้อนรับ ' . $user['name']);
+  redirect_after_show_flash('/n3-sport/index.php', 5000, 'เข้าสู่ระบบสำเร็จ', 'กำลังพาไปหน้าแรก…');
+  exit;
+}else{
+    flash_add('danger', 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+    redirect_after_show_flash('/n3-sport/login.php', 5000, 'เข้าสู่ระบบไม่สำเร็จ', 'กรุณาลองใหม่อีกครั้ง…');
 }
-
-mysqli_stmt_bind_param($stmt, 'ss', $username, $password);
-mysqli_stmt_execute($stmt);
-$result = mysqli_stmt_get_result($stmt);
-$user   = $result ? mysqli_fetch_assoc($result) : null;
-
-// ---------- Check result ----------
-if (!$user) {
-    // ไม่พบบัญชีหรือรหัสผ่านไม่ถูกต้อง
-    redirect('../../login.php');
-}
-
-// ---------- Set session ----------
-$_SESSION['id']       = $user['id'];
-$_SESSION['name']     = $user['name'];
-$_SESSION['username'] = $user['username'];
-$_SESSION['phone']    = $user['phone'];
-$_SESSION['email']    = $user['email'];
-$_SESSION['status']   = $user['status'];
-
-session_write_close();
-
-// ---------- Redirect by role ----------
-if ($user['status'] === 'admin') {
-    redirect('../../admin.php');
-} else {
-    redirect('../../profile.php');
-}
-
-// ---------- Cleanup ----------
-mysqli_stmt_close($stmt);
-mysqli_close($conn);

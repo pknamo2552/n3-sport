@@ -10,19 +10,32 @@ page_start('Equipment');
 <!-- Import Helper function -->
 <?php require __DIR__ . '/utils/borrow_service/equipment_helper.php'; ?>
 
-<?php
-  $db = db();
-  $q = trim($_GET['q'] ?? '');
-  $items = equipment_all($db, $q);
 
-  // Filter by keyword
-  $q = mb_strtolower(trim($_GET['q'] ?? ''));
-  if ($q !== '') {
-    $items = array_values(array_filter($items, function ($it) use ($q) {
-      return str_contains(mb_strtolower($it['name']), $q) || str_contains(mb_strtolower($it['desc']), $q);
-    }));
-  }
+<?php
+$db = db();
+$q = trim($_GET['q'] ?? '');
+$items = equipment_all($db, $q);
+
+
+// Filter by keyword
+$q = mb_strtolower(trim($_GET['q'] ?? ''));
+if ($q !== '') {
+  $items = array_values(array_filter($items, function ($it) use ($q) {
+    return str_contains(mb_strtolower($it['name']), $q) || str_contains(mb_strtolower($it['desc']), $q);
+  }));
+}
 ?>
+<!-- Limit Borrow -->
+<?php if (($_GET['borrow'] ?? '') === 'limit'): ?>
+  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <i class="bi bi-exclamation-triangle me-1"></i>
+    คุณยืมครบเพดานที่อนุญาตต่อผู้ใช้แล้ว กรุณาคืนบางรายการก่อน
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<?php endif; ?>
+
+<!-- Alert -->
+<?php flash_render(); ?>
 
 <body>
   <!-- Content -->
@@ -72,14 +85,18 @@ page_start('Equipment');
                 <p class="card-text small text-muted mb-3"><?= e($it['description'] ?? '') ?></p>
 
                 <div class="mt-auto d-flex gap-2">
-                  <a href="utils/borrow.php?id=<?= (int)$it['id'] ?>&qty=1"
-                    class="btn btn-primary btn-sm flex-grow-1<?= $disabled ?>">
+                  <!-- ใหม่: เปิด Modal -->
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-sm flex-grow-1<?= $disabled ?>"
+                    data-bs-toggle="modal"
+                    data-bs-target="#borrowModal"
+                    data-id="<?= (int)$it['id'] ?>"
+                    data-name="<?= e($it['name']) ?>"
+                    data-stock="<?= (int)$it['stock'] ?>"
+                    <?= $disabled ? 'disabled' : '' ?>>
                     <i class="bi bi-bag-plus me-1"></i><?= $btnLabel ?>
-                  </a>
-                  <a href="equipment_detail.php?id=<?= (int)$it['id'] ?>"
-                    class="btn btn-outline-secondary btn-sm">
-                    รายละเอียด
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
@@ -112,6 +129,110 @@ page_start('Equipment');
     });
   </script>
 </body>
+
+
+<!-- Borrow Modal -->
+<div class="modal fade" id="borrowModal" tabindex="-1" aria-labelledby="borrowModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content" method="post" action="utils/borrow_service/borrow.php">
+      <div class="modal-header">
+        <h5 class="modal-title" id="borrowModalLabel">ยืมอุปกรณ์</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ปิด"></button>
+      </div>
+
+      <div class="modal-body">
+        <input type="hidden" name="equipment_id" id="bm-equipment-id">
+
+        <div class="mb-3">
+          <label class="form-label">อุปกรณ์</label>
+          <input type="text" class="form-control" id="bm-equipment-name" disabled>
+        </div>
+
+        <div class="mb-3">
+          <div class="d-flex justify-content-between">
+            <label for="bm-qty" class="form-label mb-0">จำนวนที่ยืม</label>
+            <small class="text-muted">คงเหลือ: <span id="bm-stock">0</span></small>
+          </div>
+          <input type="number" class="form-control"
+            id="bm-qty" name="qty"
+            min="1" value="1" required inputmode="numeric" pattern="[0-9]*">
+          <div class="form-text">ใส่จำนวน 1–2 ชุด (ไม่เกินจำนวนคงเหลือ)</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="bm-due" class="form-label">กำหนดวันคืน</label>
+          <input type="date" class="form-control" id="bm-due" name="due_date" required>
+          <div class="form-text">เลือกวันคืนภายใน 14 วันนับจากวันนี้</div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">หมายเหตุ (ไม่บังคับ)</label>
+          <textarea class="form-control" name="note" rows="2" placeholder="เช่น ขอรับพรุ่งนี้เช้า"></textarea>
+        </div>
+
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="1" id="bm-confirm" required>
+          <label class="form-check-label" for="bm-confirm">ยืนยันการยืมตามจำนวนและวันคืนที่ระบุ</label>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+        <button type="submit" class="btn btn-primary"><i class="bi bi-check2 me-1"></i>ยืนยันการยืม</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const modal = document.getElementById('borrowModal');
+    const qty = document.getElementById('bm-qty');
+    const stockSpan = document.getElementById('bm-stock');
+    const due = document.getElementById('bm-due');
+
+    function fmtDate(d) {
+      const z = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`;
+    }
+
+    modal.addEventListener('show.bs.modal', (ev) => {
+      const btn = ev.relatedTarget;
+      const id = btn.getAttribute('data-id');
+      const name = btn.getAttribute('data-name');
+      const stock = parseInt(btn.getAttribute('data-stock') || '0', 10);
+
+      document.getElementById('bm-equipment-id').value = id;
+      document.getElementById('bm-equipment-name').value = name;
+      stockSpan.textContent = stock;
+
+      // ✅ จำกัดจำนวนสูงสุด: min(stock, 2)
+      const HARD_MAX = 2;
+      qty.min = 1;
+      qty.max = Math.min(stock, HARD_MAX);
+      qty.value = Math.min(1, qty.max) || 1;
+
+      // วันคืน: วันนี้..+14 วัน (เหมือนเดิม)
+      const today = new Date();
+      const max = new Date();
+      max.setDate(today.getDate() + 14);
+      due.min = fmtDate(today);
+      due.max = fmtDate(max);
+      due.value = fmtDate(max);
+
+      document.getElementById('bm-confirm').checked = false;
+    });
+
+    // กันกรอกเกิน max / ต่ำกว่า 1
+    qty.addEventListener('input', function() {
+      const max = parseInt(this.max || '0', 10);
+      let v = parseInt(this.value || '0', 10);
+      if (isNaN(v) || v < 1) v = 1;
+      if (max && v > max) v = max;
+      this.value = v;
+    });
+  })();
+</script>
 
 <?php page_end(); ?>
 

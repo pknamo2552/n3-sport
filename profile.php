@@ -1,6 +1,9 @@
 <?php require __DIR__ . '/app/bootstrap.php';
 page_start('Profile'); ?>
 
+<!-- Alert -->
+<?php flash_render(); ?>
+
 <body>
   <main id="content" class="container">
 
@@ -49,7 +52,7 @@ page_start('Profile'); ?>
           </div>
           <hr class="text-muted" />
 
-          <form id="profileForm" method="post" action="profile_update.php" novalidate>
+          <form id="profileForm" method="post" action="utils/usm_service/profile_update.php" novalidate>
             <div class="row g-3 g-lg-4">
 
               <!-- Name -->
@@ -112,7 +115,7 @@ page_start('Profile'); ?>
               <button type="button" id="btnCancel" class="btn btn-outline-secondary d-none">
                 Cancel
               </button>
-              <a href="logout.php" class="btn btn-outline-danger ms-auto">
+              <a href="utils/login_regis_service/logout.php" class="btn btn-outline-danger ms-auto">
                 <i class="bi bi-box-arrow-right me-1"></i>Logout
               </a>
             </div>

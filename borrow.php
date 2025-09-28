@@ -35,6 +35,9 @@ if ($user) {
 page_start('My Borrows');
 ?>
 
+<!-- Alert -->
+<?php flash_render(); ?>
+
 <header class="d-flex align-items-center justify-content-between mb-3">
   <h1 class="h5 mb-0">การยืมของฉัน</h1>
   <a href="equipment.php" class="btn btn-sm btn-outline-secondary">
@@ -77,7 +80,7 @@ page_start('My Borrows');
           </div>
           <div class="col-auto pe-3">
             <?php if ($b['status'] === 'borrowed'): ?>
-              <a href="utils/return.php?id=<?= (int)$b['id'] ?>" class="btn btn-sm btn-outline-success">คืนอุปกรณ์</a>
+              <a href="utils/borrow_service/return.php?id=<?= (int)$b['id'] ?>" class="btn btn-sm btn-outline-success">คืนอุปกรณ์</a>
             <?php endif; ?>
           </div>
         </div>

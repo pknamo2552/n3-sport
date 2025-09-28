@@ -1,94 +1,108 @@
-<?php require __DIR__ . '/app/bootstrap.php';
-page_start('Register'); ?>
+<?php
+require __DIR__ . '/app/bootstrap.php';
+page_start('Register');
+?>
 
-<body>
-  <main id="content" class="container py-2">
-    <div class="row justify-content-center">
-      <div class="col-12 col-sm-10 col-md-8 col-lg-7 col-xl-6">
+<main id="content" class="container py-4">
+  <?php flash_render(); ?>
 
-        <div class="card shadow-sm mt-4">
-          <div class="card-body p-4">
-            <div class="text-center mb-4">
-              <i class="bi bi-person-plus" style="font-size: 2.8rem;"></i>
-              <h1 class="h4 mt-2 mb-1">สมัครสมาชิก</h1>
-              <p class="text-muted small">Create your N3 Sport account</p>
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <div class="text-center mb-3">
+            <i class="bi bi-person-plus" style="font-size:2rem;"></i>
+            <h1 class="h4 mt-2 mb-0">สมัครสมาชิก</h1>
+            <p class="text-muted small">สร้างบัญชีใหม่ใน N3 Sport</p>
+          </div>
+
+          
+          <form id="formRegister" class="needs-validation" method="post" action="utils/login_regis_service/register.php" novalidate>
+            <div class="mb-3">
+              <label class="form-label">ชื่อ-นามสกุล</label>
+              <input type="text" class="form-control" name="full_name" required minlength="2">
+              <div class="invalid-feedback">กรอกชื่อ-นามสกุลอย่างน้อย 2 ตัวอักษร</div>
             </div>
 
-            <form name="formRegister" method="post" action="utils/login_regis_service/register.php" novalidate>
-              <div class="row g-3">
-                <!-- Name -->
-                <div class="col-12">
-                  <label class="form-label">Name | ชื่อ-นามสกุล</label>
-                  <input type="text" class="form-control" name="name" required>
-                  <div class="invalid-feedback">กรอกชื่อด้วยนะ</div>
-                </div>
+            <div class="mb-3">
+              <label class="form-label">Username</label>
+              <input type="text" class="form-control" name="username"
+                     required pattern="[A-Za-z0-9_]{4,20}" minlength="4" maxlength="20"
+                     aria-describedby="uHelp">
+              <div class="invalid-feedback">ใช้ตัวอักษร/ตัวเลข/ขีดล่าง 4–20 ตัว</div>
+            </div>
 
-                <!-- Username + Email -->
-                <div class="col-12 col-md-6">
-                  <label class="form-label">Username | ชื่อผู้ใช้</label>
-                  <input type="text" class="form-control" name="username" required>
-                  <div class="invalid-feedback">กรอกชื่อผู้ใช้ด้วยนะ</div>
-                </div>
-                <div class="col-12 col-md-6">
-                  <label class="form-label">Email</label>
-                  <input type="email" class="form-control" name="email" required>
-                  <div class="invalid-feedback">กรอกอีเมลให้ถูกต้อง</div>
-                </div>
+            <div class="mb-3">
+              <label class="form-label">E-mail</label>
+              <input type="email" class="form-control" name="email" required>
+              <div class="invalid-feedback">รูปแบบอีเมลไม่ถูกต้อง</div>
+            </div>
 
-                <!-- Phone -->
-                <div class="col-12">
-                  <label class="form-label">Phone (optional) | เบอร์โทร (ไม่บังคับ)</label>
-                  <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                    <input type="tel" class="form-control" name="phone"
-                      placeholder="เช่น 0812345678" inputmode="tel"
-                      pattern="^$|^(0[0-9]{9})$" maxlength="10">
-                  </div>
-                  <div class="form-text">ถ้ากรอก ให้เป็นตัวเลข 10 หลักขึ้นต้นด้วย 0</div>
-                  <div class="invalid-feedback">รูปแบบเบอร์โทรไม่ถูกต้อง</div>
-                </div>
+            <div class="mb-3">
+              <label class="form-label">เบอร์โทร</label>
+              <input type="tel" class="form-control" name="phone"
+                     required pattern="^[0-9+\-\s]{8,20}$" aria-describedby="pHelp">
+              <div class="invalid-feedback">รูปแบบเบอร์โทรไม่ถูกต้อง</div>
+            </div>
 
-                <!-- Password + Confirm -->
-                <div class="col-12 col-md-6">
-                  <label class="form-label">Password | รหัสผ่าน</label>
-                  <div class="input-group">
-                    <input type="password" class="form-control" name="password" id="regPass" minlength="6" required>
-                    <button class="btn btn-outline-secondary" type="button" id="togglePass">
-                      <i class="bi bi-eye"></i>
-                    </button>
-                  </div>
-                  <div class="invalid-feedback">กรอกรหัสผ่าน (≥ 6 ตัวอักษร)</div>
-                </div>
-                <div class="col-12 col-md-6">
-                  <label class="form-label">Confirm password | ยืนยันรหัสผ่าน</label>
-                  <input type="password" class="form-control" name="confirm_password" id="regPass2" required>
-                  <div class="invalid-feedback">รหัสผ่านไม่ตรงกัน</div>
-                </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">รหัสผ่าน</label>
+                <input type="password" class="form-control" name="password" required minlength="6">
+                <div class="invalid-feedback">รหัสผ่านอย่างน้อย 6 ตัวอักษร</div>
               </div>
-
-              <!-- Buttons -->
-              <div class="d-grid gap-2 mt-4">
-                <button type="submit" class="btn btn-primary btn-lg">สมัครสมาชิก</button>
-                <button type="reset" class="btn btn-outline-secondary">ล้างข้อมูล</button>
+              <div class="col-md-6">
+                <label class="form-label">ยืนยันรหัสผ่าน</label>
+                <input type="password" class="form-control" name="password_confirm" required minlength="6">
+                <div class="invalid-feedback">ยืนยันรหัสผ่านให้ตรงกัน</div>
               </div>
-            </form>
-          </div>
-        </div>
+            </div>
 
-        <div class="text-center mt-3">
-          <span class="text-muted small">มีบัญชีอยู่แล้ว?</span>
-          <a href="login.php" class="small">เข้าสู่ระบบ</a>
+            <div class="form-check mt-3">
+              <input class="form-check-input" type="checkbox" value="1" id="agree" required>
+              <label class="form-check-label" for="agree">ยอมรับเงื่อนไขการใช้งาน</label>
+              <div class="invalid-feedback">กรุณายอมรับเงื่อนไขก่อนสมัคร</div>
+            </div>
+
+            <div class="d-grid gap-2 mt-4">
+              <button type="submit" class="btn btn-success">สมัครสมาชิก</button>
+              <a class="btn btn-outline-secondary" href="login.php">มีบัญชีอยู่แล้ว? เข้าสู่ระบบ</a>
+            </div>
+          </form>
         </div>
       </div>
     </div>
+  </div>
+</main>
 
-  </main>
+<script>
+// Bootstrap validation + เช็ครหัสผ่านให้ตรงกัน
+(() => {
+  const form = document.getElementById('formRegister');
+  form.addEventListener('submit', (e) => {
+    // 1) ให้ browser ตรวจ required/pattern/minlength ก่อน
+    if (!form.checkValidity()) {
+      e.preventDefault(); e.stopPropagation();
+    }
 
-  <script src="assets/js/main.js"></script>
-  <script src="assets/js/layout-utils.js"></script>
-  <!-- script validation เดิมของคุณยังใช้ได้ -->
-</body>
+    // 2) เช็ครหัสผ่านตรงกัน
+    const pwd = form.elements['password'].value.trim();
+    const cf  = form.elements['password_confirm'].value.trim();
+    if (pwd !== cf) {
+      e.preventDefault(); e.stopPropagation();
+      form.elements['password_confirm'].setCustomValidity('notmatch');
+    } else {
+      form.elements['password_confirm'].setCustomValidity('');
+    }
+
+    form.classList.add('was-validated');
+  });
+
+  // เคลียร์ customValidity เมื่อแก้ไข
+  form.elements['password_confirm'].addEventListener('input', function(){
+    this.setCustomValidity('');
+  });
+})();
+</script>
 
 <?php page_end(); ?>
-
-</html>

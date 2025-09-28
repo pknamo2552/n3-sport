@@ -1,11 +1,13 @@
-<?php require __DIR__ . '/app/bootstrap.php'; page_start('Home'); ?>
+<?php require __DIR__ . '/app/bootstrap.php';
+page_start('Home'); ?>
+<?php $loggedIn = !empty($_SESSION['username']); ?>
 
 <body>
   <main id="content" class="container-lg py-4">
 
     <!-- Hero -->
     <section class="position-relative overflow-hidden rounded-4 shadow-sm mb-4"
-             style="background: linear-gradient(120deg,#0ea5e9 0%, #6366f1 50%, #a855f7 100%);">
+      style="background: linear-gradient(120deg,#0ea5e9 0%, #6366f1 50%, #a855f7 100%);">
       <div class="container py-5">
         <div class="row align-items-center g-4">
           <div class="col-12 col-lg-7 text-white">
@@ -17,12 +19,14 @@
               <a href="equipment.php" class="btn btn-light text-dark">
                 <i class="bi bi-bag-check me-1"></i> ดูอุปกรณ์ทั้งหมด
               </a>
-              <a href="login.php" class="btn btn-outline-light">
-                <i class="bi bi-box-arrow-in-right me-1"></i> เข้าสู่ระบบ
-              </a>
-              <a href="register.php" class="btn btn-outline-light">
-                <i class="bi bi-person-plus me-1"></i> สมัครสมาชิก
-              </a>
+              <?php if (!$loggedIn): ?>
+                <a href="login.php" class="btn btn-outline-light">
+                  <i class="bi bi-box-arrow-in-right me-1"></i> เข้าสู่ระบบ
+                </a>
+                <a href="register.php" class="btn btn-outline-light">
+                  <i class="bi bi-person-plus me-1"></i> สมัครสมาชิก
+                </a>
+              <?php endif; ?>
             </div>
           </div>
         </div>
@@ -121,9 +125,9 @@
   </main>
 
 
-  
+
   <!-- Provider -->
-  <script src="assets/js/main.js"></script> 
+  <script src="assets/js/main.js"></script>
   <script src="assets/js/layout-utils.js"></script>
 
   <!-- Script Init -->
@@ -137,4 +141,5 @@
   </script>
 </body>
 <?php page_end(); ?>
+
 </html>

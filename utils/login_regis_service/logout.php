@@ -1,10 +1,7 @@
 <?php
 require __DIR__ . '/../../app/bootstrap.php'; // ต้องมี session_start() อยู่ในนี้แล้ว
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-  header('Location: ' . BASE_URL . 'login.php');
-  exit;
-}
+$username = e($_SESSION['username'] ?? '');
 $_SESSION = [];
 if (ini_get('session.use_cookies')) {
   $p = session_get_cookie_params();
@@ -12,5 +9,6 @@ if (ini_get('session.use_cookies')) {
 }
 session_destroy();
 
-header('Location: ' . BASE_URL . 'login.php?logged_out=1');
+flash_add('success', 'ออกจากระบบ ไว้พบกันใหม่ ' . $username);
+redirect_after_show_flash('/n3-sport/login.php', 5000, 'ออกจากระบบ', 'ไว้พบกันใหม่');
 exit;
