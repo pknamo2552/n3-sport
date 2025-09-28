@@ -3,9 +3,8 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title><?= e($GLOBALS['_page_title'] ?? 'N3 Sport') ?></title>
 
-  <!-- Favicons -->
-  <link href="4e.png" rel="icon" />
-  <link href="4e.png" rel="apple-touch-icon" />
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.ico">
 
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
